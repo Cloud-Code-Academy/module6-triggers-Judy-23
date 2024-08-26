@@ -19,6 +19,9 @@
 * - Get Started with Apex Triggers: https://trailhead.salesforce.com/content/learn/modules/apex_triggers/apex_triggers_intro
 * NOTE: Disable all duplicate rules in the org. This will help prevent errors in the test classes or triggers. https://help.salesforce.com/s/articleView?id=ind.Disable_Account_Duplicate_Rule_CAM_OS_Enabled.htm&type=5
 */
+
+
+
 @IsTest
 public with sharing class TriggerTest {
 
@@ -28,6 +31,7 @@ public with sharing class TriggerTest {
     * When an account is inserted change the account type to 'Prospect' if there is no value in the type field.
     * Trigger should only fire on insert.
     */
+
     @IsTest 
     static void testAccountTrigger_setTypeProspect() {
         // Prepare the test data
@@ -148,7 +152,7 @@ public with sharing class TriggerTest {
         List<Account> accountsToInsert = new List<Account>();
         List<Account> accountsNotHot = new List<Account>();
         for (Integer i = 0; i < 400; i++) {
-            if (Math.mod(0,2) == 0) {
+            if (Math.mod(i,2) == 0) {
                 Account acc = new Account(
                     Name = 'Test Account ' + i,
                     Phone = '1234567890',
@@ -186,7 +190,7 @@ public with sharing class TriggerTest {
         update insertedAccounts;
         List<Account> updatedAccounts = [SELECT Id, Rating FROM Account WHERE Id IN :insertedAccounts];
         for (Account acc : updatedAccounts) {
-            System.assertEquals(null, acc.Rating, 'Rating should not change on update.');
+            System.assertEquals('Hot', acc.Rating, 'Rating should not change on update.');
         }
 
         // Retrieve the accounts again
